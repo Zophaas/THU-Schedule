@@ -1,35 +1,32 @@
-# THU Scheduler
+# THU排课助手
+
+**中文** | [English](README.en.md)
 
 **[thu-scheduler.hughzhao.com](https://thu-scheduler.hughzhao.com)**
 
-Plan your Tsinghua University timetable before enrollment. Search the course offerings, try out different sections, and see your week at a glance, in English or Chinese.
+在选课前规划课表：搜索开课信息，比较不同课序，一眼看清每周安排。支持中文和英文界面。
 
-## What you can do
+## 你可以做什么
 
-- **Find courses** by course number, name, or instructor. In English mode you can search by English course name.
-- **Build your week.** Add a section and it appears on the weekly grid by class period (大节). Courses that meet only in some weeks (前八周, 后八周, odd or even weeks) show up only in those weeks; step through the term week by week to see each one.
-- **Try other sections.** Preview a section before adding it, or drag a class onto another section's time slot to switch.
-- **Spot conflicts.** Two classes conflict only when they share a day, a period, and a teaching week, so a first-half and a second-half course in the same slot are fine.
-- **Add personal events** such as club meetings or a part-time job.
-- **Compare plans.** Keep several schedules per term and switch between them.
-- **Review the details:** total credits, archived seat counts, course descriptions, grading, textbooks, and lab information.
-- **Share a schedule** with a link. Your friend sees your classes and can save a copy. Personal events are never included.
-- **Add it to your calendar.** Download an `.ics` file with every class on its real date and time, ready for Google Calendar, Apple Calendar, or Outlook. Holidays are left out.
+- **查找课程**：按课程号、课程名或教师搜索。英文界面下也可以按英文课程名搜索。
+- **排出一周课表**：添加课序后，课程会按大节显示在周课表上。只在部分周上课的课程（前八周、后八周、单周、双周等）只会出现在对应的教学周，可以逐周切换查看。
+- **拖拽排课**：添加前可以先预览课序，也可以把课表上的课程**直接拖拽**到同课程号的其他时间完成调课。
 
-## Good to know
+  ![拖拽课程切换课序](docs/drag-to-switch.gif)
 
-- **Planning only.** Adding a course here doesn't enroll you. Use the university's enrollment system to actually sign up.
-- **The course list is a snapshot** taken on November 18, 2026. Offerings, times, and seat counts may have changed since then, so check the official system before enrolling.
-- **Your schedules stay in your browser.** There's no account, and nothing is uploaded. Clearing your browser data removes them, and they don't follow you to another device; use a share link to move a schedule.
-- **Calendar export** is available for terms whose academic calendar has been added, currently Spring 2026–2027. Make-up class days (调休) aren't included until the university announces them.
-- **Rooms aren't shown,** because the course listing doesn't include them.
+- **发现时间冲突**：只有星期、节次和教学周都重叠时才算冲突，所以同一时段的前八周课程和后八周课程不会冲突。
+- **添加个人事项**：例如社团活动或兼职。
+- **比较多个方案**：每个学期可以保存多份课表，随时切换。
+- **查看课程详情**：总学分、存档时的余量、课程简介、考核方式、教材和实验信息。
+- **分享课表**：生成一个链接，朋友打开后可以看到你的课程并保存一份副本。
+- **导出日历**：下载 `.ics` 文件，把每节课放到实际的日期和时间上，可导入 Google 日历、Apple 日历或 Outlook。放假日不会安排课程。
 
-## 中文简介
+## 注意事项
 
-THU排课助手帮助你在选课前规划清华大学的课表：搜索开课信息、比较不同课序、在周课表中查看每周安排，支持中英文界面。可以添加个人事项、保存多个方案、通过链接分享课程（不含个人事项），并导出日历 (.ics) 到常用日历应用。
+- **课表只保存在你的浏览器中**：无需注册，也不会上传任何数据。清除浏览器数据会删除课表；可以用分享链接把课表转到别的设备。
+- **日历导出**：目前仅支持2026–2027学年春季学期。调休补课安排要等学校公布后才会加入。
 
-本工具仅用于规划，不会替你选课。课程数据为 2026 年 11 月 18 日的快照，选课前请以学校系统为准。课表只保存在你的浏览器中。
 
-## License
+## 许可
 
-See [LICENSE](LICENSE). Course information belongs to its original authors and Tsinghua University.
+见 [LICENSE](LICENSE)。
