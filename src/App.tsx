@@ -582,7 +582,12 @@ export default function App() {
         </aside>
       </div>
 
-      <footer className="site-footer muted">{t('copyright')}</footer>
+      <footer className="site-footer muted">
+        {t('copyright')} ·{' '}
+        <a href="https://github.com/Zophaas/THU-Schedule" target="_blank" rel="noopener noreferrer">
+          {t('sourceCode')}
+        </a>
+      </footer>
 
       {eventDraft && (
         <EventDialog

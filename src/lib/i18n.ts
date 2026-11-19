@@ -21,6 +21,7 @@ export function defaultLang(): Lang {
 const en = {
   appName: 'THU Scheduler',
   copyright: 'Copyright © 2026 Hugh Zhao',
+  sourceCode: 'Source on GitHub',
   term: 'Term',
   saving: 'Saving…',
   saved: 'Saved in this browser',
@@ -53,7 +54,7 @@ const en = {
   weekendHidden1: '1 meeting falls on Saturday or Sunday, which is hidden.',
   showWeekends: 'Show weekends',
   gridNote:
-    'Rows are Tsinghua class periods. Clock times and rooms aren’t shown because the archive doesn’t include them.',
+    'Rows are Tsinghua class periods.',
   hiddenItems: '{n} hidden items are not drawn.',
   hiddenItem1: '1 hidden item is not drawn.',
   dragHint: 'Tip: drag a course with other sections onto one of the faded slots to switch sections.',
@@ -71,9 +72,10 @@ const en = {
   addCoursePlaceholderEn: 'Course number, English name, or instructor',
   addCoursePlaceholderZh: 'Course number, name, or instructor',
   noMatch: 'No courses match “{q}”.',
-  moreMatch: 'More courses match; refine the search.',
+  moreMatch: 'Showing the first {n} matching courses. Refine your search terms to find the rest.',
+  searchTip: 'Tip: separate keywords with ； to search for several at once, e.g. 微积分；线性代数.',
   inPlan: 'in plan (section {n})',
-  emptyBuild: 'Search for a course by number, name, or instructor to add it to this schedule.',
+  emptyBuild: 'Search for a course by number, name, or instructor to add it to this schedule. Separate keywords with ； to search for several at once.',
   sectionCol: 'Sec.',
   meetingsCol: 'Meetings',
   instructorCol: 'Instructor',
@@ -218,6 +220,7 @@ type Messages = Record<keyof typeof en, string>;
 const zh: Messages = {
   appName: 'THU排课助手',
   copyright: '© 2026 Hugh Zhao 版权所有',
+  sourceCode: 'GitHub 源代码',
   term: '学期',
   saving: '保存中…',
   saved: '已保存在本浏览器',
@@ -248,7 +251,7 @@ const zh: Messages = {
   weekendHidden: '有 {n} 次课在周六或周日，周末列当前已隐藏。',
   weekendHidden1: '有 1 次课在周六或周日，周末列当前已隐藏。',
   showWeekends: '显示周末',
-  gridNote: '每行为一个清华大节。存档中没有具体钟点和教室，因此不显示。',
+  gridNote: '每行为一个清华大节。',
   hiddenItems: '{n} 项已隐藏，未在课表中显示。',
   hiddenItem1: '1 项已隐藏，未在课表中显示。',
   dragHint: '提示：有其他课序的课程可拖到半透明的时段上，以切换课序。',
@@ -266,9 +269,10 @@ const zh: Messages = {
   addCoursePlaceholderEn: '课程号、英文课名或教师',
   addCoursePlaceholderZh: '课程号、课程名或教师',
   noMatch: '没有匹配“{q}”的课程。',
-  moreMatch: '还有更多匹配结果，请缩小搜索范围。',
+  moreMatch: '仅显示前 {n} 门匹配的课程。请细化搜索词以查找其他课程。',
+  searchTip: '提示：用；分隔多个关键词可同时搜索，例如“微积分；线性代数”。',
   inPlan: '已在计划中（课序 {n}）',
-  emptyBuild: '按课程号、课程名或教师搜索课程，加入当前课表。',
+  emptyBuild: '按课程号、课程名或教师搜索课程，加入当前课表。用；分隔多个关键词可同时搜索。',
   sectionCol: '课序',
   meetingsCol: '上课时间',
   instructorCol: '教师',
@@ -290,7 +294,7 @@ const zh: Messages = {
   seatsLeft: '余 {n}',
   seatsFull: '已满',
   seatsUnknown: '未知',
-  seatDetail: '本科 {ua} / {uc}，研究生 {ga} / {gc}（余量 / 容量，{date} 存档，非实时）',
+  seatDetail: '本科 {ua} / {uc}，研究生 {ga} / {gc}（余量 / 容量）',
   personalEvent: '个人事项',
   conflicts: '时间冲突',
   noConflicts: '在星期、节次和周次都已知的课程中没有时间冲突。',
@@ -333,9 +337,9 @@ const zh: Messages = {
   sharedSaveNote: '保存后会作为该学期的新课表，不会改动你已有的课表。',
   saveShared: '保存为新课表',
   calendarTitle: '日历（.ics）',
-  calendarNote: '按校历把每门课和个人事项放到第 1–{weeks} 教学周的实际日期上，时间为官方节次时间（北京时间，UTC+8）。存档中没有教室信息，因此不包含地点。',
+  calendarNote: '按校历把每门课和个人事项放到第 1–{weeks} 教学周的实际日期上。',
   calendarHolidays: '以下校历放假日不安排课程：{list}。',
-  calendarMakeUps: '这些假期的调休补课安排尚未公布，因此未包含。请留意学校通知，必要时调整或重新下载。',
+  calendarMakeUps: '假期的调休补课安排尚未公布，因此未包含。请留意学校通知，必要时调整或重新下载。',
   downloadCalendar: '下载日历 (.ics)',
   calendarCount: '共 {n} 个日程',
   calendarLeftOut: '未加入日历：',
@@ -401,7 +405,8 @@ const MESSAGES: Record<Lang, Messages> = { en, zh };
 export type MessageKey = keyof typeof en;
 
 export function t(key: MessageKey, vars: Record<string, string | number> = {}): string {
-  return MESSAGES[current][key].replace(/(\w+)/g, (match, name: string) =>
+  // Placeholders are written {name}; unknown names are left as they are.
+  return MESSAGES[current][key].replace(/\{(\w+)\}/g, (match, name: string) =>
     name in vars ? String(vars[name]) : match,
   );
 }

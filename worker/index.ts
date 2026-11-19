@@ -103,39 +103,50 @@ async function handleMeta(db: D1Database): Promise<Response> {
   return Response.json(result, { headers: { 'cache-control': 'no-cache' } });
 }
 
+/** Keywords separated by ; or ； match courses that match any of them. */
+const MAX_KEYWORDS = 5;
+
 async function handleSearch(db: D1Database, term: string, params: URLSearchParams): Promise<Response> {
   const query = (params.get('q') ?? '').trim().slice(0, 100);
   const department = params.get('department') ?? '';
-  // English mode searches English names; Chinese text in the query still matches Chinese names.
-  const english = params.get('lang') === 'en';
-  const hasCjk = /[\u3400-\u9fff]/.test(query);
-  const nameColumn = english && !hasCjk ? 'coalesce(course_name_en, \'\')' : 'course_name';
   if (!query && !department) return json({ term, query, courses: [], truncated: false } satisfies SearchResponse);
+  // English mode searches English names; a keyword with Chinese text still matches Chinese names.
+  const english = params.get('lang') === 'en';
+  const keywords = [...new Set(query.split(/[;；]/).map((part) => part.trim()).filter(Boolean))].slice(0, MAX_KEYWORDS);
+  // A department with no keywords lists the department's courses.
+  if (!keywords.length) keywords.push('');
 
-  const like = `%${escapeLike(query)}%`;
-  const prefix = `${escapeLike(query)}%`;
-  // Rank: exact course number, number prefix, name prefix, name contains, instructor contains.
+  // Rank each keyword: exact course number, number prefix, name prefix, name contains,
+  // instructor contains. A course matching several keywords takes its best rank.
+  const bindings: (string | number)[] = [term, department, COURSE_LIMIT + 1];
+  const branches = keywords.map((keyword) => {
+    const nameColumn = english && !/[\u3400-\u9fff]/.test(keyword) ? "coalesce(course_name_en, '')" : 'course_name';
+    const base = bindings.length;
+    bindings.push(keyword, `${escapeLike(keyword)}%`, `%${escapeLike(keyword)}%`);
+    const [exact, prefix, like] = [`?${base + 1}`, `?${base + 2}`, `?${base + 3}`];
+    return `SELECT course_number,
+           CASE
+             WHEN ${exact} = '' THEN 5
+             WHEN course_number = ${exact} THEN 0
+             WHEN course_number LIKE ${prefix} ESCAPE '\\' THEN 1
+             WHEN ${nameColumn} LIKE ${prefix} ESCAPE '\\' THEN 2
+             WHEN ${nameColumn} LIKE ${like} ESCAPE '\\' THEN 3
+             WHEN instructors LIKE ${like} ESCAPE '\\' THEN 4
+           END AS rank
+         FROM sections
+         WHERE term = ?1 AND (?2 = '' OR department = ?2)`;
+  });
   const matched = await db
     .prepare(
       `SELECT course_number FROM (
-         SELECT course_number,
-           CASE
-             WHEN ?2 = '' THEN 5
-             WHEN course_number = ?2 THEN 0
-             WHEN course_number LIKE ?3 ESCAPE '\\' THEN 1
-             WHEN ${nameColumn} LIKE ?3 ESCAPE '\\' THEN 2
-             WHEN ${nameColumn} LIKE ?4 ESCAPE '\\' THEN 3
-             WHEN instructors LIKE ?4 ESCAPE '\\' THEN 4
-           END AS rank
-         FROM sections
-         WHERE term = ?1 AND (?5 = '' OR department = ?5)
+         ${branches.join('\n         UNION ALL\n         ')}
        )
        WHERE rank IS NOT NULL
        GROUP BY course_number
        ORDER BY min(rank), course_number
-       LIMIT ?6`,
+       LIMIT ?3`,
     )
-    .bind(term, query, prefix, like, department, COURSE_LIMIT + 1)
+    .bind(...bindings)
     .all<{ course_number: string }>();
   const numbers = matched.results.map((row) => row.course_number);
   const truncated = numbers.length > COURSE_LIMIT;

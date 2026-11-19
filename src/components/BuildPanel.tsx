@@ -203,17 +203,19 @@ function AddCourse({
                   selected={planned?.sectionNumber}
                   retrievedAt={retrievedAt}
                   onPick={(section) => {
+                    // The search stays open so several courses can be added from one search.
                     onAdd(course, section);
                     onPreview(null, null);
-                    setOpen(false);
-                    setQuery('');
                   }}
                   onPreview={(section) => onPreview(section && course, section)}
                 />
               </div>
             );
           })}
-          {results?.truncated && <p className="muted">{t('moreMatch')}</p>}
+          {results?.truncated && (
+            <p className="notice more-match">{t('moreMatch', { n: results.courses.length })}</p>
+          )}
+          {results && results.courses.length > 0 && <p className="search-tip">{t('searchTip')}</p>}
         </div>
       )}
     </div>

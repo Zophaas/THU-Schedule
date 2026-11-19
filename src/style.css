@@ -60,6 +60,7 @@ button, input, select { font: inherit; color: inherit; }
 .mono { font-family: ui-monospace, Menlo, monospace; font-size: .92em; }
 .fatal { padding: 48px 16px; text-align: center; }
 .site-footer { padding: 16px 24px 24px; border-top: 1px solid var(--border); font-size: 13px; text-align: center; }
+.site-footer a { color: inherit; }
 a { color: var(--link); }
 
 button { cursor: pointer; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); padding: 6px 12px; }
@@ -168,6 +169,8 @@ input, select { border: 1px solid var(--border); border-radius: 4px; background:
 /* Results render inline in the sidebar so they are never clipped by its scroll area. */
 .search-results { margin-top: 6px; border: 1px solid var(--border); max-height: 55vh; overflow: auto; }
 .search-results > p { margin: 8px; font-size: 14px; }
+.search-results > .more-match { background: var(--warn-bg); }
+.search-results > .search-tip { color: var(--muted); font-size: 12px; }
 .result { padding: 6px 8px; }
 .result + .result { border-top: 1px solid var(--border); }
 .result-head { margin: 0 0 4px; font-size: 14px; }
