@@ -1,0 +1,17 @@
+node_modules/
+dist/
+scripts/
+migrations/
+.wrangler/
+.dev.vars*
+.env.local
+.idea/
+__pycache__/
+*.py
+*.pyc
+data/
+.DS_Store
+.claude/settings.local.json
+wrangler.jsonc
+.claude/
+CLAUDE.md

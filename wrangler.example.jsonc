@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Copy to wrangler.jsonc and fill in your own values; wrangler.jsonc is not committed.
+  "name": "thu-scheduler",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-11-18",
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    // Every term's archive lives here, keyed by the `term` column.
+    {
+      "binding": "DB",
+      "database_name": "scheduler-coursedata",
+      "database_id": "<your-d1-database-id>",
+      "migrations_dir": "migrations"
+    }
+  ]
+  // Optional: serve on your own domain.
+  // "routes": [{ "pattern": "scheduler.example.com", "custom_domain": true }]
+}
